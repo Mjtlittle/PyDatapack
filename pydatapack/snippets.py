@@ -11,7 +11,7 @@ def item_frame_connected_block(item,command,item_rotation=-1,on_block=''):
     parts.append(f'}}] at @s positioned ^ ^ ^-1 ')
 
     if on_block != '':
-        on_block = f'if block ~ ~ ~ {on_block} '
+        parts.append(f'if block ~ ~ ~ {on_block} ')
     
     parts.append('run '+command)
     
