@@ -50,7 +50,12 @@ def carrot_click_trigger(datapack,*functions):
     datapack.last_function.addCommand(f'scoreboard players set @a[scores={{{objective_name}=1..}}] {objective_name} 0')
     pass
 
-def raycast(datapack, name, hit_function, traveling_function=None, pass_blocks=AIR_BLOCKS, block_limit=32, iteration_speed=0.5, halt_on_entities=True, player=True, travel_safety_distance=0):
+def instant_raycast(
+    datapack, name, 
+    hit_command=None, 
+    traveling_command=None, 
+    pass_blocks=AIR_BLOCKS, 
+    block_limit=32, iteration_speed=0.5, halt_on_entities=True, is_player=True):
 
     # ! halt system ???
     # raycast player halt tag
@@ -67,12 +72,9 @@ def raycast(datapack, name, hit_function, traveling_function=None, pass_blocks=A
     # raycast pass blocks tag
     pass_blocks_tag = datapack.newBlocksTag(f'{name}_raycast_pass',pass_blocks)
 
-    # traveling function
-    if traveling_function != None:
-        if travel_safety_distance <= 0:
-            recursion_function.addCommand(traveling_function())
-        else:
-            recursion_function.addCommand(f'execute unless entity @s[distance=..{travel_safety_distance}] run {traveling_function()}')
+    # traveling command
+    if traveling_command != None:
+        recursion_function.addCommand(traveling_command)
 
     #if pass
     working_command = [f'execute if block ~ ~ ~ {pass_blocks_tag} '] # start passing blocks
@@ -89,14 +91,13 @@ def raycast(datapack, name, hit_function, traveling_function=None, pass_blocks=A
     recursion_function.addCommand(''.join(working_command))
 
     #else hit
-
-    if halt_on_entities:
-        recursion_function.addCommand(f'execute if entity @e[distance=..1] run {hit_function()}')
-
-    recursion_function.addCommand(f'execute unless block ~ ~ ~ {pass_blocks_tag} run {hit_function()}')
+    if hit_command == None:
+        if halt_on_entities:
+            recursion_function.addCommand(f'execute if entity @e[distance=..1] run {hit_command}')
+        recursion_function.addCommand(f'execute unless block ~ ~ ~ {pass_blocks_tag} run {hit_command}')
 
     # trigger function
-    vert_offset = str(PLAYER_HEAD_HEIGHT) if player else ''
+    vert_offset = str(PLAYER_HEAD_HEIGHT) if is_player else ''
     trigger_function = datapack.newFunction(f'{INTERNAL_PREFIX}{name}_raycast_trigger')
     trigger_function.addCommand(f'execute as @s rotated as @s at @s positioned ~ ~{vert_offset} ~ run {recursion_function()}')
 
