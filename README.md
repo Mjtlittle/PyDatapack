@@ -1,11 +1,8 @@
 # PyDatapack
 A python library for creating Minecraft Datapacks!
 
-### Recommended Import Header (for maximum versitility)
+### Recommended Import Header
 ```python
-from pydatapack import implementations
-from pydatapack import snippets
-from pydatapack import debug
 from pydatapack import *
 ```
 
