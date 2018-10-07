@@ -19,7 +19,7 @@ def formatNamespace(name):
     
     return ''.join(namespace)
 
-def standardObjective(namespace,name,length=16):
+def mangleObjective(namespace, name, length=16):
     random.seed(namespace)
     nsu = 5-len(namespace) if len(namespace) < 5 else 0
     nu = 7-len(name) if len(name) < 7 else 0
@@ -27,7 +27,7 @@ def standardObjective(namespace,name,length=16):
     return namespace[:5] + c + name[:7]
 
 class TextSegment:
-    def __init__(self,text=None):
+    def __init__(self, text=None):
         self.working_text = []
 
         if text != None:
@@ -57,10 +57,10 @@ class TextSegment:
     def empty(self):
         return len(self.working_text) == 0
     
-    def append(self,value):
+    def append(self, value):
         self.working_text.append(value)
 
-    def insert(self,i,value):
+    def insert(self, i, value):
         self.working_text.insert(i,value)
     
     def __str__(self):

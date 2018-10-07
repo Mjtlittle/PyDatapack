@@ -2,7 +2,7 @@ from .internals import TextSegment
 
 class RichTextFormat:
     class StringGenerator:
-        def __init__(self,text):
+        def __init__(self, text):
             self.n = 0
             self.text = text
 
@@ -14,7 +14,7 @@ class RichTextFormat:
         def shadow_next(self):
             return self[self.n+1]
 
-        def __getitem__(self,i):
+        def __getitem__(self, i):
             if i >= len(self.text) or i < 0:
                 return False
             return self.text[i]
@@ -52,7 +52,7 @@ class RichTextFormat:
         'n':'underlined',
         'o':'italic'}
 
-    def __init__(self,raw_text):
+    def __init__(self, raw_text):
         self.raw_text = raw_text
         self.output = []
 
@@ -71,7 +71,7 @@ class RichTextFormat:
         return '['+','.join(map(str,parts))+']'
 
 
-    def parse(self,text):
+    def parse(self, text):
         parts = [TextSegment()]
         text = RichTextFormat.StringGenerator(text)
 
@@ -181,5 +181,5 @@ class RichTextFormat:
 def toRichText(richtext):
     return str(RichTextFormat(richtext).render())
 
-def tellRichText(richtext,target='@a'):
-    return f'tellraw {target} {toRichText(richtext)}'
+def tellRichText(richtext, selector='@a'):
+    return f'tellraw {selector} {toRichText(richtext)}'

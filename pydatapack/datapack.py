@@ -65,9 +65,9 @@ class Datapack:
     def last_function(self):
         return self.functions[-1]
 
-    # * other
-    def standardObjective(self,name,length=16):
-        return standardObjective(self.namespace,name,length)
+    # # ! * other
+    # def stdObjective(self,name,length=16):
+    #     return standardObjective(self.namespace,name,length)
 
     # * compilation factors
     def compile(self):
@@ -108,6 +108,17 @@ class Datapack:
             with open(f'{path}/{function.name}.mcfunction','w') as f:
                 f.write(str(function))
 
+    def compile_to(self, location):
+
+        new_location = location+'/'+self.name
+
+        # remove old directories
+        if os.path.exists(new_location):
+            shutil.rmtree(new_location)
+
+        self.compile()
+        shutil.move(self.name, new_location)
+
     def __make_meta(self):
         with open(f'{self.name}/pack.mcmeta','w') as f:
             f.write(f'{{\n\t"pack": {{\n\t\t"pack_format": 1,\n\t\t"description": "{escapeJson(self.description)}"\n\t}}\n}}')
@@ -141,7 +152,7 @@ class Datapack:
                 replace_set = ('true' if replace else 'false')
                 f.write(f'{{\n\t"replace":{replace_set},\n\t"values": [\n\t\t"{sub_content}"\n\t]\n}}')
 
-    def __process_function_tags(self,active_tags,replace=False):
+    def __process_function_tags(self, active_tags, replace=False):
         for tag in active_tags.keys():
             # if no namespace is provided use own
             if ':' in tag:

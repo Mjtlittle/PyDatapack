@@ -1,61 +1,39 @@
 from .function import *
 from .constants import *
+from .internals import *
 
-def player_first_join(datapack,*functions):
+def first_join_event(datapack, command):
+
     # vars
     target_tag = datapack.namespace+'_joined'
 
-    # register function/s
-    datapack.registerFunctions(functions)
-
-
-    # make trigger function
-    datapack.newFunction(f'{INTERNAL_PREFIX}first_join_trigger','minecraft:tick')
-
     # add lines for running functions
-    for func in functions:
-        datapack.last_function.addCommand(f'execute as @a[tag=!{target_tag}] at @s run function {func.target}')
+    datapack.tick_function.addCommand(f'execute as @a[tag=!{target_tag}] at @s run {command}')
     
     # tag players after complete
-    datapack.last_function.addCommand(f'execute as @a[tag=!{target_tag}] run tag @s add {target_tag}')
-
+    datapack.tick_function.addCommand(f'execute as @a[tag=!{target_tag}] run tag @s add {target_tag}')
 
     # make reset join function
     datapack.newFunction('first_join_reset')
     datapack.last_function.addCommand(f'tag @a[tag={target_tag}] remove {target_tag}')
 
-def carrot_click_trigger(datapack,*functions):
+def carrot_click_event(datapack, command):
     
     # vars
-    objective_name = datapack.standardObjective('carrot_click')
-
-    # register function/s
-    datapack.registerFunctions(functions)
-    
+    objective_name = mangleObjective(datapack.namespace, 'carrot_click')
 
     # initialize scoreboards
-    datapack.newFunction(f'{INTERNAL_PREFIX}carrot_click_init','minecraft:load')
-    datapack.last_function.addCommand(f'scoreboard objectives add {objective_name} minecraft.used:minecraft.carrot_on_a_stick')
-    datapack.last_function.addCommand(f'scoreboard players set @a {objective_name} 0')
-
-
-    # tick check
-    datapack.newFunction(f'{INTERNAL_PREFIX}carrot_click_trigger','minecraft:tick')
+    datapack.install_function.addCommand(f'scoreboard objectives add {objective_name} minecraft.used:minecraft.carrot_on_a_stick')
+    datapack.install_function.addCommand(f'scoreboard players set @a {objective_name} 0')
 
     # call functions from tick
-    for func in functions:
-        datapack.last_function.addCommand(f'execute as @a[scores={{{objective_name}=1..}}] at @s run function {func.target}')
+    datapack.tick_function.addCommand(f'execute as @a[scores={{{objective_name}=1..}}] at @s run {command}')
 
     # reset score
-    datapack.last_function.addCommand(f'scoreboard players set @a[scores={{{objective_name}=1..}}] {objective_name} 0')
-    pass
+    datapack.tick_function.addCommand(f'scoreboard players set @a[scores={{{objective_name}=1..}}] {objective_name} 0')
 
-def instant_raycast(
-    datapack, name, 
-    hit_command=None, 
-    traveling_command=None, 
-    pass_blocks=AIR_BLOCKS, 
-    block_limit=32, iteration_speed=0.5, halt_on_entities=True, is_player=True):
+
+def instant_raycast(datapack, name, hit_command=None, traveling_command=None, pass_blocks=AIR_BLOCKS, block_limit=32, iteration_speed=0.5, halt_on_entities=True, is_player=True):
 
     # ! halt system ???
     # raycast player halt tag
@@ -91,7 +69,7 @@ def instant_raycast(
     recursion_function.addCommand(''.join(working_command))
 
     #else hit
-    if hit_command == None:
+    if hit_command != None:
         if halt_on_entities:
             recursion_function.addCommand(f'execute if entity @e[distance=..1] run {hit_command}')
         recursion_function.addCommand(f'execute unless block ~ ~ ~ {pass_blocks_tag} run {hit_command}')
@@ -103,4 +81,7 @@ def instant_raycast(
 
     return trigger_function
 
+    pass
+
+def client_side_trigger(datapack):
     pass

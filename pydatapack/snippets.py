@@ -1,6 +1,6 @@
 from .commands import *
 
-def item_frame_connected_block(item, command, item_rotation=-1,on_block=''):
+def item_frame_on_block_event(item, command, item_rotation=-1,on_block=''):
     parts = [f'execute as @e[type=item_frame, nbt={{Item:{{id:"{item}"}}']
 
     if item_rotation != -1:
@@ -16,17 +16,17 @@ def item_frame_connected_block(item, command, item_rotation=-1,on_block=''):
     
     return ''.join(parts)
 
-def item_frame_remove_item(target, reset_rotation=True):
-    parts = ['execute as target if entity @s[type=item_frame] run data merge entity @s {Item:{id:"minecraft:air",Count:1b}']
+def item_frame_remove_item(selector, reset_rotation=True):
+    parts = ['execute as ' ,selector ,' if entity @s[type=item_frame] run data merge entity @s {Item:{id:"minecraft:air",Count:1b}']
     if reset_rotation:
         parts.append(', ItemRotation: 0b')
     parts.append('}')
     return ''.join(parts)
 
-def custom_kill(target,richtext):
+def custom_kill(selector, richtext):
     parts = []
     parts.append(gamerule('showDeathMessages',False))
-    parts.append('kill @s')
+    parts.append(f'kill {selector}')
     parts.append(gamerule('showDeathMessages'))
     parts.append(tellRichText(richtext))
     return '\n'.join(parts)

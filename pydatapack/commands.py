@@ -2,7 +2,7 @@ from .richtext import tellRichText
 from .internals import *
 from .constants import *
 
-def pos(x,y,z,mode='relative'):
+def pos(x, y, z, mode='relative'):
     working = []
     for part in [x,y,z]:
         if mode == 'relative':
@@ -12,13 +12,13 @@ def pos(x,y,z,mode='relative'):
         working.append(' ')
     return ''.join(working)[:-1]
 
-def tellraw(text,target='@s'):
-    return f'tellraw {target} {TextSegment(text).render()}'
+def tellraw(text, selector='@s'):
+    return f'tellraw {selector} {TextSegment(text).render()}'
 
-def setblock(block,position='~ ~ ~',mode='replace'):
+def setblock(block, position='~ ~ ~', mode='replace'):
     return f'setblock {position} {block} {mode}'
 
-def gamerule(name,value=None):
+def gamerule(name, value=None):
     # if no value provided
     if value == None:
         value = GAMERULE_DEFUALTS.get(name)
@@ -29,20 +29,8 @@ def gamerule(name,value=None):
     
     return f'gamerule {name} {str(value).lower()}'
 
+def tag_add(tag, selector='@s'):
+    return f'tag {selector} add {tag}'
 
-# ! incomplete
-def sb_operation(op):
-    op.split()
-
-'''
-    def relative(x,y,z):
-        x = str(x) if x != 0 else ''
-        y = str(y) if y != 0 else ''
-        z = str(z) if z != 0 else ''
-        return f'~{x} ~{y} ~{z}'
-
-    def exact(x,y,z):
-        return f'{x} {y} {z}'
-'''
-
-
+def tag_remove(tag, selector='@s'):
+    return f'tag {selector} remove {tag}'

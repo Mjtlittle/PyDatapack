@@ -1,7 +1,7 @@
 import re
 
 class Function:
-    def __init__(self,target,*tags):
+    def __init__(self, target, *tags):
         self.target = target
         self.tags = tags
         self.lines = []
@@ -44,7 +44,7 @@ class Function:
         return tags
 
     @namespace.setter
-    def namespace(self,value):
+    def namespace(self, value):
         if ':' in self.target:
             self.target = value+':'+self.target.split(':')[1]
         else:
@@ -73,10 +73,13 @@ class Function:
                 objectives.append(line[i+len(lookup):].split(' ')[0])
         return objectives
     
-    def append(self,command):
+    def append(self, command):
         return self.addCommand(command)
-    
-    def addCommand(self,command):
+
+    def __iadd__(self, command):
+        self.addCommand(command)
+
+    def addCommand(self, command):
         if '\n' in command:
             for sub_command in command.split('\n'):
                 if sub_command.strip() != '':
