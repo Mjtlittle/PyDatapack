@@ -1,4 +1,5 @@
-from .constants import VALID_OBJECTIVE_CHARACTERS
+from . import constants
+
 import string
 import json
 import random
@@ -23,8 +24,13 @@ def mangleObjective(namespace, name, length=16):
     random.seed(namespace)
     nsu = 5-len(namespace) if len(namespace) < 5 else 0
     nu = 7-len(name) if len(name) < 7 else 0
-    c = ''.join([random.choice(VALID_OBJECTIVE_CHARACTERS) for _ in range((length-5-7)+nsu+nu)])
+    c = ''.join([random.choice(constants.VALID_OBJECTIVE_CHARACTERS) for _ in range((length-5-7)+nsu+nu)])
     return namespace[:5] + c + name[:7]
+
+def inferMCNamespace(block):
+    if ':' not in block:
+        return f'minecraft:{block}'
+    return block
 
 class TextSegment:
     def __init__(self, text=None):
@@ -94,3 +100,47 @@ class TextSegment:
     
         working_output.append('}')
         return ''.join(working_output)
+
+class NamespaceAdressable:
+    def __init__(self, target):
+        self.target = target
+
+    @property
+    def name(self):
+        # remove namespace if provided
+        target = self.target
+        if ':' in target:
+            target = target.split(':')[1]
+
+        # get name if in subdirectories
+        if '/' in target:
+            return target.split('/')[-1]
+        else:
+            return target
+            
+    @property
+    def namespace(self):
+        if ':' in self.target:
+            return self.target.split(':')[0]
+        else:
+            return None
+
+    @namespace.setter
+    def namespace(self, value):
+        if ':' in self.target:
+            self.target = value+':'+self.target.split(':')[1]
+        else:
+            self.target = value+':'+self.target
+        return True
+
+    @property
+    def parentStructure(self):
+        # remove namespace if provided
+        target = self.target
+        if ':' in target:
+            target = target.split(':')[1]
+
+        if '/' in target:
+            return '/'.join(target.split('/')[:-1])
+        else:
+            return None

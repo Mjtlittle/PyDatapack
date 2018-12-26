@@ -1,4 +1,4 @@
-from .internals import TextSegment
+from ...internals import TextSegment
 
 class RichTextFormat:
     class StringGenerator:

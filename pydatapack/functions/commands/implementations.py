@@ -1,6 +1,8 @@
-from .function import *
-from .constants import *
-from .internals import *
+from ..function import *
+# ^^ remove?
+
+from ...constants import *
+from ...internals import *
 
 def first_join_event(datapack, command):
 
@@ -31,7 +33,6 @@ def carrot_click_event(datapack, command):
 
     # reset score
     datapack.tick_function.addCommand(f'scoreboard players set @a[scores={{{objective_name}=1..}}] {objective_name} 0')
-
 
 def instant_raycast(datapack, name, hit_command=None, traveling_command=None, pass_blocks=AIR_BLOCKS, block_limit=32, iteration_speed=0.5, halt_on_entities=True, is_player=True):
 
@@ -83,5 +84,6 @@ def instant_raycast(datapack, name, hit_command=None, traveling_command=None, pa
 
     pass
 
-def client_side_trigger(datapack):
+# ! unimplemented
+def toggle_trigger(datapack, name, on_command, off_command=None, target='@a'):
     pass

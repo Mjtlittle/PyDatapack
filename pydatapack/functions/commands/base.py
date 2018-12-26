@@ -1,6 +1,6 @@
 from .richtext import tellRichText
-from .internals import *
-from .constants import *
+from ...internals import *
+from ...constants import *
 
 def pos(x, y, z, mode='relative'):
     working = []
@@ -34,3 +34,22 @@ def tag_add(tag, selector='@s'):
 
 def tag_remove(tag, selector='@s'):
     return f'tag {selector} remove {tag}'
+
+# * scoreboard
+#! unimplemented
+
+def obj_create(name, criteria='dummy', display_name=None):
+    pass
+def obj_delete(name):
+    pass
+def obj_setdisplay(name, location='sidebar'):
+    pass
+
+def obj_set(name, selector, value):
+    pass
+def obj_add(name, selector, value):
+    pass
+def obj_sub(name, selector, value):
+    pass
+def obj_reset(name, selector):
+    pass

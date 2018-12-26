@@ -1,4 +1,4 @@
-from .commands import *
+from .base import *
 
 def item_frame_on_block_event(item, command, item_rotation=-1,on_block=''):
     parts = [f'execute as @e[type=item_frame, nbt={{Item:{{id:"{item}"}}']
